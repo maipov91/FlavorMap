@@ -1,4 +1,4 @@
-using FlavorMap.Api.Data;
+﻿using FlavorMap.Api.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,8 +20,9 @@ builder.Services.AddCors(options =>
 });
 
 // Database (SQLite)
+var dbPath = Path.Combine(Directory.GetCurrentDirectory(), "flavormap.db");
 builder.Services.AddDbContext<AppDbContext>(opt =>
-    opt.UseSqlite(builder.Configuration.GetConnectionString("Default")));
+    opt.UseSqlite($"Data Source={dbPath}"));
 
 var app = builder.Build();
 
@@ -44,7 +45,12 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.EnsureCreated();
-    Seed.EnsureSeed(db);
+
+    // Đảm bảo tables tồn tại trước khi seed
+    if (db.Database.CanConnect())
+    {
+        Seed.EnsureSeed(db);
+    }
 }
 
 app.Run();
