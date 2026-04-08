@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="" readonly="0" foreign_keys="" case_sensitive_like="" temp_store="" wal_autocheckpoint="" synchronous=""/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="4175"/><column_width id="4" width="0"/></tab_structure><tab_browse><table title="." custom_title="0" dock_id="3" table="0,0:"/><dock_state state="000000ff00000000fd0000000100000002000004c9000002befc0100000003fb000000160064006f0063006b00420072006f007700730065003101000000000000043c0000000000000000fb000000160064006f0063006b00420072006f00770073006500320100000000000004c90000000000000000fb000000160064006f0063006b00420072006f00770073006500330100000000ffffffff0000011800ffffff000002580000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="SQL 1*">UPDATE Places
+SET 
+    MenuSeasonality = 'HOME Hanoi''s autumn menu is rooted in familiarity, memory, and the quiet richness of Northern Vietnamese cuisine.
+
+Rather than reinventing tradition, the kitchen refines it — drawing from iconic Hanoi dishes such as braised pork, grilled fish, bun thang, and cha ca, while subtly elevating them through modern techniques and careful presentation.
+
+Each dish preserves the soul of home-style cooking, yet feels more composed, balanced, and intentional.
+
+The flavors are warm, layered, and deeply comforting — reflecting the gentle, reflective nature of Hanoi in autumn.
+
+Dining here feels less like discovering something new, and more like returning to something long remembered, expressed with greater clarity and refinement.',
+
+    DiningMoodExperience = 'Set within a restored French colonial villa, HOME Hanoi offers a calm and intimate escape from the city''s intensity.
+
+The space is defined by warm yellow tones, aged wood, Indochine architecture, and soft natural light — creating an atmosphere that feels both nostalgic and quietly elegant.
+
+Whether seated in a private dining room or a shared space overlooking a sunlit courtyard, the experience is unhurried and composed.
+
+It is particularly suited for meaningful conversations, intimate gatherings, or hosting guests in a setting that values subtlety over spectacle.
+
+Dining at HOME Hanoi feels like stepping into a slower version of the city — where time softens, and every detail invites you to stay a little longer.',
+
+    FoodWeight = 'Overall weight: Medium.
+
+The dishes carry a gentle richness from slow-cooked meats, broths, and traditional seasonings, balanced by fresh herbs, acidity, and clean finishes.
+
+The experience feels warm and satisfying without becoming heavy, making it ideal for long, unhurried meals, especially in the softer rhythm of autumn.',
+
+    CulturalNarratives = 'HOME Hanoi presents Vietnamese cuisine as a living expression of culture, memory, and identity.
+
+Each dish reflects the essence of Hanoi''s culinary heritage — where family recipes, regional flavors, and everyday meals form the foundation of something deeply meaningful.
+
+Rather than transforming tradition, HOME refines it with care, preserving its emotional depth while presenting it in a more contemporary and accessible way.
+
+From the balance of flavors to the architectural setting, everything is designed to evoke a sense of place — a Hanoi that is both timeless and evolving.
+
+Dining here is not only about food, but about reconnecting with the cultural rhythm of the city.'
+
+WHERE BrandName = 'HOME Hanoi Vietnamese Restaurant';</sql><sql name="SQL 2*">INSERT INTO Places ( 
+    BrandName, CuisineType, Address, Contact, SocialMedia,
+    DiningFormat, ImageUrl, Season, SeasonSection,
+    MenuSeasonality, DiningMoodExperience, FoodWeight, CulturalNarratives,
+    PersonalRating, MenuImage, MoodImage, WeightImage, CultureImage
+) VALUES (
+    'SENTÉ - The Flavor Of Lotus',
+    'Contemporary Vietnamese cuisine with wellness-driven, lotus-inspired elements',
+    'no 1. 20 Nguyen Quang Bich, Hoan Kiem, Hanoi · no 2. 12 Lieu Giai, Ba Dinh, Hanoi',
+    '+84 24 3266 8968 · +84 989 823 412',
+    '@sente.theflavoroflotus',
+    'Contemporary Vietnamese dining · Seasonal and wellness-focused menu',
+    '/images/places/places-19/hero.png',
+    'spring',
+    'bloom',
+
+    'At SENTÉ, spring unfolds through lightness, freshness, and a quiet sense of renewal.
+
+The menu draws from familiar Vietnamese ingredients — lotus seeds, brown rice, fresh herbs, and seasonal vegetables — prepared with restraint to preserve their natural character.
+
+Rather than layering complexity, each dish is composed to feel clean, balanced, and nourishing.
+
+From lotus-based drinks to delicate rice dishes and herbal combinations, the experience reflects a shift toward clarity and vitality, where food supports both body and mood.
+
+Dining here feels like stepping into early spring — soft, green, and quietly full of life.',
+
+    'SENTÉ offers a calm, garden-like atmosphere where natural light, greenery, and soft air create a sense of openness and ease.
+
+The space feels intimate yet breathable, with sunlit corners, wooden textures, and a gentle rhythm that encourages guests to slow down.
+
+Whether it is a quiet lunch or an early evening gathering, the experience is unhurried and reflective.
+
+It is a place not built around spectacle, but around subtle comfort — where conversations flow easily, and the outside world feels slightly more distant.
+
+Being here feels like sitting in the first days of spring, when everything begins again, quietly.',
+
+    'Overall weight: Light to Medium.
+
+The dishes emphasize freshness, herbs, and clean flavors, with minimal heaviness.
+
+Ingredients are handled gently to retain their natural texture and nutritional balance.
+
+The overall experience feels light, refreshing, and restorative — ideal for daytime dining or moments when the body seeks something softer and more grounding.',
+
+    'SENTÉ approaches Vietnamese cuisine through the lens of renewal, wellness, and emotional balance.
+
+Rather than focusing on nostalgia alone, it reinterprets traditional flavors in a way that aligns with a more mindful, contemporary lifestyle.
+
+Ingredients such as lotus, herbs, and seasonal produce are not only culinary elements, but also carry symbolic meaning — representing purity, growth, and inner calm.
+
+Each dish reflects a quiet dialogue between tradition and modern living, where food becomes a way to reconnect with both cultural roots and personal well-being.
+
+Dining at SENTÉ is less about indulgence, and more about returning to a state of clarity, simplicity, and gentle awareness.',
+
+    9.0,
+    '/images/places/places-19/menu.png',
+    '/images/places/places-19/mood.png',
+    '/images/places/places-19/weight.png',
+    '/images/places/places-19/culture.png'
+);</sql><sql name="SQL 3*">UPDATE Places SET Vibe = 'Being here feels like sitting in the first days of spring'
+WHERE BrandName = 'SENTÉ - The Flavor Of Lotus';
+
+</sql><sql name="SQL 4*">UPDATE Places
+SET 
+    Address = 'no 1. 20 Nguyen Quang Bich, Hoan Kiem, Hanoi
+no 2. 12 Lieu Giai, Ba Dinh, Hanoi',
+
+    Contact = '+84 24 3266 8968
++84 989 823 412'
+
+WHERE BrandName = 'SENTÉ  -  The Flavor Of Lotus';</sql><current_tab id="3"/></tab_sql></sqlb_project>

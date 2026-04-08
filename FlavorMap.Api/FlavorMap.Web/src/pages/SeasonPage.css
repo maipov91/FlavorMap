@@ -1,0 +1,175 @@
+﻿/* ── BASE ─────────────────────────────────────────────────── */
+.season-page {
+    min-height: 100vh;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.season-inner {
+    width: 100%;
+    min-height: 100vh;
+    border-radius: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+/* ── SEASON BACKGROUNDS ───────────────────────────────────── */
+/* Summer — DARK RED (FIXED) */
+.season-page.summer,
+.season-page.summer .season-inner {
+    background: #2B0A0D;
+}
+
+/* Spring */
+.season-page.spring,
+.season-page.spring .season-inner {
+    background: #0B1A0F;
+}
+
+/* Autumn */
+.season-page.autumn,
+.season-page.autumn .season-inner {
+    background: #1A1204;
+}
+
+/* Winter */
+.season-page.winter,
+.season-page.winter .season-inner {
+    background: #060E1A;
+}
+
+
+
+.grain-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    /* ✅ FIX: giảm opacity mạnh */
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 180px 180px;
+    /* ✅ FIX QUAN TRỌNG: bỏ overlay */
+    mix-blend-mode: normal;
+}
+
+/* ── MAP AREA ─────────────────────────────────────────────── */
+.season-map {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    z-index: 3;
+}
+
+/* ── BACK BUTTON ──────────────────────────────────────────── */
+.back-btn {
+    position: absolute;
+    top: 30px;
+    left: 40px;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 10;
+    font-family: var(--font-body);
+}
+
+.back-btn--summer {
+    position: absolute;
+    top: 24px;
+    left: 32px;
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.5);
+    z-index: 100;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: color 0.2s ease;
+}
+
+    .back-btn--summer:hover {
+        color: rgba(255, 255, 255, 0.85);
+    }
+
+/* ── INTRO ────────────────────────────────────────────────── */
+.season-intro {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 4;
+}
+
+    .season-intro h1 {
+        font-family: var(--font-title);
+        font-size: clamp(60px, 10vw, 120px);
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.9);
+        letter-spacing: 0.15em;
+    }
+
+/* ── STICKER ─────────────────────────────────────────────── */
+.sticker-wrap {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.season-sticker {
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.15));
+}
+
+.sticker-tooltip {
+    font-family: var(--font-body);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.85);
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+/* ── CENTER TITLE ─────────────────────────────────────────── */
+.season-center-title {
+    position: absolute;
+    left: 40%;
+    top: 45%;
+    transform: translate(-50%, -50%);
+    width: max-content;
+}
+
+.season-center-label {
+    font-family: var(--font-body);
+    font-size: 13px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+    margin-bottom: 8px;
+}
+
+.season-center-name {
+    font-family: var(--font-title);
+    font-size: clamp(52px, 7vw, 100px);
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.88);
+    line-height: 1;
+    letter-spacing: 0.04em;
+}
+
+/* ── LAYOUT ─────────────────────────────────────────────── */
+.summer-layout {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
