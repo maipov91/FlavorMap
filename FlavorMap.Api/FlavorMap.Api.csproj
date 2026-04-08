@@ -4,9 +4,11 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
-
 	<ItemGroup>
-		<None Remove="FlavorMap.Web\src\types.ts" />
+	  <Compile Remove="FlavorMap.Web\**" />
+	  <Content Remove="FlavorMap.Web\**" />
+	  <EmbeddedResource Remove="FlavorMap.Web\**" />
+	  <None Remove="FlavorMap.Web\**" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -22,13 +24,6 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.4" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<TypeScriptCompile Include="FlavorMap.Web\src\api.ts" />
-		<TypeScriptCompile Include="FlavorMap.Web\src\pages\MapPage.tsx" />
-		<TypeScriptCompile Include="FlavorMap.Web\src\pages\PlaceDetailPage.tsx" />
-		<TypeScriptCompile Include="FlavorMap.Web\src\types.ts" />
 	</ItemGroup>
 	<ItemGroup>
 		<Content Update="wwwroot\**\*">
