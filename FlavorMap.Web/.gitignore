@@ -22,9 +22,3 @@ dist-ssr
 *.njsproj
 
 *.sw?
-
-appsettings.Development.json
-*.db
-*.db-shm
-*.db-wal
-flavormap.sqbpro
