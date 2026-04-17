@@ -43,12 +43,23 @@ public class ReviewsController : ControllerBase
         var place = await _db.Places.FindAsync(placeId);
         if (place == null) return NotFound();
 
+        // ── Validation ──────────────────────────────────────────
+        if (string.IsNullOrWhiteSpace(dto.Nickname) || dto.Nickname.Trim().Length < 2)
+            return BadRequest("Nickname must be at least 2 characters.");
+        if (dto.Nickname.Length > 50)
+            return BadRequest("Nickname cannot exceed 50 characters.");
+        if (string.IsNullOrWhiteSpace(dto.Description) || dto.Description.Trim().Length < 10)
+            return BadRequest("Description must be at least 10 characters.");
+        if (dto.Description.Length > 500)
+            return BadRequest("Description cannot exceed 500 characters.");
+
+        // ── Save ────────────────────────────────────────────────
         var review = new Review
         {
             PlaceId = placeId,
-            Nickname = dto.Nickname,
+            Nickname = dto.Nickname.Trim(),
             Rating = Math.Clamp(dto.Rating, 1, 10),
-            Description = dto.Description,
+            Description = dto.Description.Trim(),
             Season = dto.Season,
             CreatedAt = DateTime.UtcNow,
         };

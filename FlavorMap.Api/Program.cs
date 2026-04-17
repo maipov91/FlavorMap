@@ -46,7 +46,7 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.EnsureCreated();
 
-    // Đảm bảo tables tồn tại trước khi seed
+    
     if (db.Database.CanConnect())
     {
         Seed.EnsureSeed(db);

@@ -9,7 +9,7 @@
     foodWeight?: string;
     address?: string;      
     socialMedia?: string;
-    seasonSection: string;
+    seasonSection?: string;
     vibe?: string;
 }
 

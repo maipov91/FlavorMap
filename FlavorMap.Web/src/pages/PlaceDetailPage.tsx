@@ -343,22 +343,36 @@ export default function PlaceDetailPage() {
     const apiBase = import.meta.env.VITE_API_BASE;
 
     const handleSubmit = async () => {
-        if (!nickname.trim() || !description.trim()) {
-            setSubmitErr("Please fill in your name and experience.");
+    if (!nickname.trim() || !description.trim()) {
+        setSubmitErr("Please fill in your name and experience.");
+        return;
+    }
+    setSubmitting(true);
+    setSubmitErr("");
+    try {
+        const res = await fetch(`${apiBase}/api/places/${id}/reviews`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ nickname, rating, description, season: place.season }),
+        });
+
+        // ──error message ──────────
+        if (!res.ok) {
+            const errText = await res.text();
+            setSubmitErr(errText || "Something went wrong.");
             return;
         }
-        setSubmitting(true); setSubmitErr("");
-        try {
-            await fetch(`${apiBase}/api/places/${id}/reviews`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ nickname, rating, description, season: place.season }),
-            });
-            setSubmitted(true);
-            setNickname(""); setDescription(""); setRating(8);
-        } catch { setSubmitErr("Something went wrong. Please try again."); }
-        finally { setSubmitting(false); }
-    };
+
+        setSubmitted(true);
+        setNickname("");
+        setDescription("");
+        setRating(8);
+    } catch {
+        setSubmitErr("Network error. Please try again.");
+    } finally {
+        setSubmitting(false);
+    }
+};
 
     const inputStyle: React.CSSProperties = {
         width: "100%", padding: "12px 0", background: "transparent",
