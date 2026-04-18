@@ -20,7 +20,27 @@ const RATING_LABELS: Record<number, string> = {
     7: "Very good", 6: "Good", 5: "Average",
     4: "Below average", 3: "Disappointing", 2: "Poor", 1: "Unacceptable",
 };
+// ─── URL helpers ─────────────────────────────────────────────────────────────
+function buildMapsUrl(brandName: string, address: string | undefined | null): string | null {
+    const query = [brandName, address].filter(Boolean).join(", ");
+    return query
+        ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`
+        : null;
+}
 
+function buildInstagramUrl(socialMedia: string | undefined | null): string | null {
+    if (!socialMedia) return null;
+    const handle = socialMedia.replace(/^@/, "").trim();
+    return handle ? `https://instagram.com/${handle}` : null;
+}
+
+function buildPhoneUrl(contact: string | undefined | null): string | null {
+    if (!contact) return null;
+    const phoneMatch = contact.match(/[+]?[\d][\d\s-]{6,}/);
+    if (!phoneMatch) return null;
+    const cleaned = phoneMatch[0].replace(/[\s-]/g, "");
+    return `tel:${cleaned}`;
+}
 // ─── Types ──────────────────────────────────────────────────────────────────
 type Review = { id: number; nickname: string; rating: number; description: string; createdAt: string };
 
@@ -62,7 +82,6 @@ function StorySection({ title, text, imageUrl, imageAlt, reverse = false, accent
                     justifyContent: "center",
                     padding: "80px 72px",
                 }}>
-                    {/* Title — màu be, in hoa, in đậm */}
                     <div style={{
                         fontSize: 17,
                         letterSpacing: "0.25em",
@@ -75,7 +94,6 @@ function StorySection({ title, text, imageUrl, imageAlt, reverse = false, accent
                         {title}
                     </div>
 
-                    {/* Body text — màu be, tất cả mùa */}
                     <p style={{
                         fontFamily: "var(--font-body)",
                         fontSize: 15,
@@ -83,12 +101,10 @@ function StorySection({ title, text, imageUrl, imageAlt, reverse = false, accent
                         color: "rgba(245, 236, 216, 0.82)",
                         margin: 0,
                         whiteSpace: "pre-line",
-                      
                     }}>
                         {text}
                     </p>
 
-                    {/* Divider line — accent color của mùa */}
                     <div style={{
                         marginTop: 40,
                         width: 40,
@@ -137,7 +153,6 @@ function ReviewCard({ review, accent }: { review: Review; accent: string }) {
     const date = new Date(review.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" });
     return (
         <motion.div
-
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -162,11 +177,11 @@ function ReviewCard({ review, accent }: { review: Review; accent: string }) {
 function RelatedRestaurantsEditorial({
     season,
     accent,
-    currentId,        
+    currentId,
 }: {
     season: string;
     accent: string;
-    currentId: number; 
+    currentId: number;
 }) {
     const [places, setPlaces] = useState<PlaceListItem[]>([]);
     const apiBase = import.meta.env.VITE_API_BASE;
@@ -177,7 +192,6 @@ function RelatedRestaurantsEditorial({
             .then((data) => {
                 if (Array.isArray(data)) {
                     const others = data.filter((p: PlaceListItem) => p.id !== currentId);
-                    // Shuffle random
                     const shuffled = others.sort(() => Math.random() - 0.5);
                     setPlaces(shuffled.slice(0, 3));
                 }
@@ -191,7 +205,7 @@ function RelatedRestaurantsEditorial({
         <div
             style={{
                 padding: "80px 60px",
-                background: "#F5ECD8", 
+                background: "#F5ECD8",
             }}
         >
             <div style={{ maxWidth: 1200, margin: "0 auto" }}>
@@ -214,7 +228,7 @@ function RelatedRestaurantsEditorial({
                             margin: 0,
                         }}
                     >
-                        Season’s Restaurants
+                        Season's Restaurants
                     </h2>
 
                     <a
@@ -242,7 +256,6 @@ function RelatedRestaurantsEditorial({
                 >
                     {places.map((p) => (
                         <div key={p.id}>
-                           
                             <a
                                 href={`/places/${p.id}`}
                                 style={{
@@ -343,36 +356,35 @@ export default function PlaceDetailPage() {
     const apiBase = import.meta.env.VITE_API_BASE;
 
     const handleSubmit = async () => {
-    if (!nickname.trim() || !description.trim()) {
-        setSubmitErr("Please fill in your name and experience.");
-        return;
-    }
-    setSubmitting(true);
-    setSubmitErr("");
-    try {
-        const res = await fetch(`${apiBase}/api/places/${id}/reviews`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ nickname, rating, description, season: place.season }),
-        });
-
-        // ──error message ──────────
-        if (!res.ok) {
-            const errText = await res.text();
-            setSubmitErr(errText || "Something went wrong.");
+        if (!nickname.trim() || !description.trim()) {
+            setSubmitErr("Please fill in your name and experience.");
             return;
         }
+        setSubmitting(true);
+        setSubmitErr("");
+        try {
+            const res = await fetch(`${apiBase}/api/places/${id}/reviews`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ nickname, rating, description, season: place.season }),
+            });
 
-        setSubmitted(true);
-        setNickname("");
-        setDescription("");
-        setRating(8);
-    } catch {
-        setSubmitErr("Network error. Please try again.");
-    } finally {
-        setSubmitting(false);
-    }
-};
+            if (!res.ok) {
+                const errText = await res.text();
+                setSubmitErr(errText || "Something went wrong.");
+                return;
+            }
+
+            setSubmitted(true);
+            setNickname("");
+            setDescription("");
+            setRating(8);
+        } catch {
+            setSubmitErr("Network error. Please try again.");
+        } finally {
+            setSubmitting(false);
+        }
+    };
 
     const inputStyle: React.CSSProperties = {
         width: "100%", padding: "12px 0", background: "transparent",
@@ -385,51 +397,256 @@ export default function PlaceDetailPage() {
 
             {/* ── HERO ──────────────────────────────────────────────────── */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", minHeight: "100vh" }}>
-                <motion.div initial={{ opacity: 0, scale: 1.04 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }} style={{ overflow: "hidden" }}>
-                    <img src={`${apiBase}${place.imageUrl}`} alt={place.brandName} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                <motion.div
+                    initial={{ opacity: 0, scale: 1.04 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+                    style={{ overflow: "hidden" }}
+                >
+                    <img
+                        src={`${apiBase}${place.imageUrl}`}
+                        alt={place.brandName}
+                        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                    />
                 </motion.div>
-                <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }} style={{ display: "flex", flexDirection: "column", justifyContent: "center", padding: "120px 72px 80px", background: season.dark }}>
-                    <div style={{ display: "inline-flex", alignSelf: "flex-start", fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", padding: "5px 14px", borderRadius: 40, background: season.accent, color: "#fff", fontFamily: "var(--font-body)", marginBottom: 40 }}>{place.season}</div>
-                    <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }} style={{ fontFamily: "var(--font-title)", fontSize: "clamp(36px, 4vw, 64px)", fontWeight: 400, lineHeight: 1.1, margin: "0 0 24px", color: "#fff", letterSpacing: "-0.01em" }}>{place.brandName}</motion.h1>
-                    <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.5 }} style={{ fontFamily: "var(--font-body)", fontSize: 15, lineHeight: 1.75, color: "rgba(255,255,255,0.7)", maxWidth: 380, margin: "0 0 48px" }}>{place.diningMoodExperience?.split(".")[0]}.</motion.p>
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.7 }} style={{ borderTop: "1px solid rgba(255,255,255,0.15)", paddingTop: 32 }}>
-                        {[
-                            { label: "Cuisine", value: place.cuisineType },
-                            { label: "Address", value: place.address },
-                            { label: "Contact", value: place.contact },
-                            { label: "Format", value: place.diningFormat },
-                            ...(place.socialMedia ? [{ label: "Social", value: place.socialMedia }] : []),
-                        ].map(({ label, value }) => (
-                            <div key={label} style={{ display: "flex", justifyContent: "space-between", padding: "12px 0", borderBottom: "1px solid rgba(255,255,255,0.08)", gap: 16 }}>
-                                <span style={{ fontSize: 13, letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(255,255,255,0.4)", flexShrink: 0 }}>{label}</span>
-                                <span style={{ fontSize: 15, whiteSpace: "pre-line", fontFamily: "var(--font-body)", color: "rgba(255,255,255,0.8)", textAlign: "right" }}>{value}</span>
-                            </div>
-                        ))}
+
+                <motion.div
+                    initial={{ opacity: 0, x: -30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                    style={{ display: "flex", flexDirection: "column", justifyContent: "center", padding: "120px 72px 80px", background: season.dark }}
+                >
+                    {/* Season badge */}
+                    <div style={{
+                        display: "inline-flex", alignSelf: "flex-start",
+                        fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase",
+                        padding: "5px 14px", borderRadius: 40,
+                        background: season.accent, color: "#fff",
+                        fontFamily: "var(--font-body)", marginBottom: 32,
+                    }}>
+                        {place.season}
+                    </div>
+
+                    {/* Personal Rating */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.2 }}
+                        style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 20 }}
+                    >
+                        <span style={{
+                            fontFamily: "var(--font-title)",
+                            fontSize: 56,
+                            fontWeight: 400,
+                            lineHeight: 1,
+                            color: season.accent,
+                        }}>
+                            {place.personalRating}
+                        </span>
+                        <span style={{
+                            fontSize: 13,
+                            color: "rgba(255,255,255,0.5)",
+                            fontFamily: "var(--font-body)",
+                            letterSpacing: "0.1em",
+                        }}>
+                            / 10
+                        </span>
+                        <span style={{
+                            fontSize: 12,
+                            color: "rgba(255,255,255,0.4)",
+                            fontFamily: "var(--font-body)",
+                            fontStyle: "italic",
+                            marginLeft: 12,
+                        }}>
+                            {RATING_LABELS[Math.round(place.personalRating)] ?? "Recommended"}
+                        </span>
                     </motion.div>
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.9 }} style={{ marginTop: 40, display: "flex", gap: 12 }}>
+
+                    {/* Brand name */}
+                    <motion.h1
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                        style={{
+                            fontFamily: "var(--font-title)",
+                            fontSize: "clamp(36px, 4vw, 64px)",
+                            fontWeight: 400, lineHeight: 1.1,
+                            margin: "0 0 24px",
+                            color: "#fff", letterSpacing: "-0.01em",
+                        }}
+                    >
+                        {place.brandName}
+                    </motion.h1>
+
+                    {/* Short description */}
+                    <motion.p
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.5 }}
+                        style={{
+                            fontFamily: "var(--font-body)",
+                            fontSize: 15, lineHeight: 1.75,
+                            color: "rgba(255,255,255,0.7)",
+                            maxWidth: 380, margin: "0 0 48px",
+                        }}
+                    >
+                        {place.diningMoodExperience?.split(".")[0]}.
+                    </motion.p>
+
+                    {/* Info table with links */}
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.8, delay: 0.7 }}
+                        style={{ borderTop: "1px solid rgba(255,255,255,0.15)", paddingTop: 32 }}
+                    >
+                        {(() => {
+                            const mapsUrl = buildMapsUrl(place.brandName, place.address);
+                            const igUrl = buildInstagramUrl(place.socialMedia);
+                            const phoneUrl = buildPhoneUrl(place.contact);
+
+                            const fields: { label: string; value: string; href?: string | null }[] = [
+                                { label: "Cuisine", value: place.cuisineType },
+                                { label: "Address", value: place.address, href: mapsUrl },
+                                { label: "Contact", value: place.contact, href: phoneUrl },
+                                { label: "Format", value: place.diningFormat },
+                                ...(place.socialMedia ? [{ label: "Social", value: place.socialMedia, href: igUrl }] : []),
+                            ];
+
+                            return fields.map(({ label, value, href }) => (
+                                <div
+                                    key={label}
+                                    style={{
+                                        display: "flex", justifyContent: "space-between",
+                                        padding: "12px 0",
+                                        borderBottom: "1px solid rgba(255,255,255,0.08)",
+                                        gap: 16,
+                                    }}
+                                >
+                                    <span style={{
+                                        fontSize: 13,
+                                        letterSpacing: "0.15em",
+                                        textTransform: "uppercase",
+                                        color: "rgba(255,255,255,0.4)",
+                                        flexShrink: 0,
+                                    }}>
+                                        {label}
+                                    </span>
+
+                                    {href ? (
+                                        <a
+                                            href={href}
+                                            target={label === "Contact" ? undefined : "_blank"}
+                                            rel={label === "Contact" ? undefined : "noopener noreferrer"}
+                                            style={{
+                                                fontSize: 15,
+                                                whiteSpace: "pre-line",
+                                                fontFamily: "var(--font-body)",
+                                                color: "rgba(255,255,255,0.8)",
+                                                textAlign: "right",
+                                                textDecoration: "none",
+                                                borderBottom: "1px solid rgba(255,255,255,0.2)",
+                                                paddingBottom: 1,
+                                                transition: "color 0.2s ease, border-color 0.2s ease",
+                                                cursor: "pointer",
+                                            }}
+                                            onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => {
+                                                e.currentTarget.style.color = season.accent;
+                                                e.currentTarget.style.borderColor = season.accent;
+                                            }}
+                                            onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => {
+                                                e.currentTarget.style.color = "rgba(255,255,255,0.8)";
+                                                e.currentTarget.style.borderColor = "rgba(255,255,255,0.2)";
+                                            }}
+                                        >
+                                            {value}
+                                        </a>
+                                    ) : (
+                                        <span style={{
+                                            fontSize: 15,
+                                            whiteSpace: "pre-line",
+                                            fontFamily: "var(--font-body)",
+                                            color: "rgba(255,255,255,0.8)",
+                                            textAlign: "right",
+                                        }}>
+                                            {value}
+                                        </span>
+                                    )}
+                                </div>
+                            ));
+                        })()}
+                    </motion.div>
+
+                    {/* Navigation buttons */}
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.8, delay: 0.9 }}
+                        style={{ marginTop: 40, display: "flex", gap: 12 }}
+                    >
                         <Link to={`/season/${place.season}`} style={{ flex: 1 }}>
-                            <motion.div whileHover={{ background: season.accent }} transition={{ duration: 0.2 }} style={{ padding: "12px 20px", background: "rgba(255,255,255,0.12)", color: "#fff", fontSize: 11, letterSpacing: "0.15em", textTransform: "uppercase", textAlign: "center", fontFamily: "var(--font-body)", cursor: "pointer" }}>← {place.season}</motion.div>
+                            <motion.div
+                                whileHover={{ background: season.accent }}
+                                transition={{ duration: 0.2 }}
+                                style={{
+                                    padding: "12px 20px",
+                                    background: "rgba(255,255,255,0.12)",
+                                    color: "#fff", fontSize: 11,
+                                    letterSpacing: "0.15em", textTransform: "uppercase",
+                                    textAlign: "center",
+                                    fontFamily: "var(--font-body)",
+                                    cursor: "pointer",
+                                }}
+                            >
+                                ← {place.season}
+                            </motion.div>
                         </Link>
                         <Link to="/map" style={{ flex: 1 }}>
-                            <motion.div whileHover={{ background: "rgba(255,255,255,0.2)" }} transition={{ duration: 0.2 }} style={{ padding: "12px 20px", border: "1px solid rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.7)", fontSize: 11, letterSpacing: "0.15em", textTransform: "uppercase", textAlign: "center", fontFamily: "var(--font-body)", cursor: "pointer" }}>Map</motion.div>
+                            <motion.div
+                                whileHover={{ background: "rgba(255,255,255,0.2)" }}
+                                transition={{ duration: 0.2 }}
+                                style={{
+                                    padding: "12px 20px",
+                                    border: "1px solid rgba(255,255,255,0.2)",
+                                    color: "rgba(255,255,255,0.7)",
+                                    fontSize: 11, letterSpacing: "0.15em",
+                                    textTransform: "uppercase", textAlign: "center",
+                                    fontFamily: "var(--font-body)",
+                                    cursor: "pointer",
+                                }}
+                            >
+                                Map
+                            </motion.div>
                         </Link>
                     </motion.div>
-                    <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }} style={{ marginTop: 60, display: "flex", alignItems: "center", gap: 10, color: "rgba(255,255,255,0.3)" }}>
+
+                    {/* Scroll hint */}
+                    <motion.div
+                        animate={{ y: [0, 8, 0] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                        style={{
+                            marginTop: 60,
+                            display: "flex", alignItems: "center", gap: 10,
+                            color: "rgba(255,255,255,0.3)",
+                        }}
+                    >
                         <div style={{ width: 1, height: 32, background: "rgba(255,255,255,0.3)" }} />
-                        <span style={{ fontSize: 9, letterSpacing: "0.25em", textTransform: "uppercase" }}>Scroll</span>
+                        <span style={{ fontSize: 9, letterSpacing: "0.25em", textTransform: "uppercase" }}>
+                            Scroll
+                        </span>
                     </motion.div>
                 </motion.div>
             </div>
 
             {/* ── STORY SECTIONS ───────────────────────────────────────── */}
             <div>
-                <StorySection title="Menu & Ingredient Seasonality" text={place.menuSeasonality} imageUrl={place.menuImage} imageAlt="Menu" reverse={false} accent={season.accent}  />
+                <StorySection title="Menu & Ingredient Seasonality" text={place.menuSeasonality} imageUrl={place.menuImage} imageAlt="Menu" reverse={false} accent={season.accent} />
                 <div style={{ height: 2, background: "rgba(0,0,0,0.06)" }} />
-                <StorySection title="Dining Mood / Experience" text={place.diningMoodExperience} imageUrl={place.moodImage} imageAlt="Dining mood" reverse={true} accent={season.accent}  />
+                <StorySection title="Dining Mood / Experience" text={place.diningMoodExperience} imageUrl={place.moodImage} imageAlt="Dining mood" reverse={true} accent={season.accent} />
                 <div style={{ height: 2, background: "rgba(0,0,0,0.06)" }} />
-                <StorySection title="Food Weight" text={place.foodWeight} imageUrl={place.weightImage} imageAlt="Food weight" reverse={false} accent={season.accent}  />
+                <StorySection title="Food Weight" text={place.foodWeight} imageUrl={place.weightImage} imageAlt="Food weight" reverse={false} accent={season.accent} />
                 <div style={{ height: 2, background: "rgba(0,0,0,0.06)" }} />
-                <StorySection title="Cultural Narratives" text={place.culturalNarratives} imageUrl={place.cultureImage} imageAlt="Cultural narratives" reverse={true} accent={season.accent}  />
+                <StorySection title="Cultural Narratives" text={place.culturalNarratives} imageUrl={place.cultureImage} imageAlt="Cultural narratives" reverse={true} accent={season.accent} />
             </div>
 
             {/* ── RATING + SUBMIT + REVIEWS ─────────────────────────────── */}
@@ -448,12 +665,7 @@ export default function PlaceDetailPage() {
                 >
                     {/* ─── LEFT: MY RATING ───────────────────────── */}
                     <Reveal>
-                        <div
-                            style={{
-                                paddingRight: 40,
-                               
-                            }}
-                        >
+                        <div style={{ paddingRight: 40 }}>
                             <div
                                 style={{
                                     fontSize: 15,
@@ -514,8 +726,7 @@ export default function PlaceDetailPage() {
                                             marginBottom: 12,
                                         }}
                                     >
-                                        {RATING_LABELS[Math.round(place.personalRating)] ??
-                                            "Recommended"}
+                                        {RATING_LABELS[Math.round(place.personalRating)] ?? "Recommended"}
                                     </div>
 
                                     <div
@@ -614,7 +825,7 @@ export default function PlaceDetailPage() {
                                         <input
                                             type="text"
                                             value={nickname}
-                                            onChange={(e) =>
+                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                                 setNickname(e.target.value)
                                             }
                                             placeholder="How would you like to be known?"
@@ -652,10 +863,8 @@ export default function PlaceDetailPage() {
                                                     max={10}
                                                     step={1}
                                                     value={rating}
-                                                    onChange={(e) =>
-                                                        setRating(
-                                                            Number(e.target.value)
-                                                        )
+                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                                        setRating(Number(e.target.value))
                                                     }
                                                     style={{
                                                         width: "100%",
@@ -683,7 +892,7 @@ export default function PlaceDetailPage() {
                                         <FieldLabel>Your Experience</FieldLabel>
                                         <textarea
                                             value={description}
-                                            onChange={(e) =>
+                                            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                                                 setDescription(e.target.value)
                                             }
                                             placeholder="Describe what made this meal memorable..."
@@ -722,17 +931,13 @@ export default function PlaceDetailPage() {
                                             letterSpacing: "0.18em",
                                             textTransform: "uppercase",
                                             fontFamily: "var(--font-body)",
-                                            cursor: submitting
-                                                ? "not-allowed"
-                                                : "pointer",
+                                            cursor: submitting ? "not-allowed" : "pointer",
                                             opacity: submitting ? 0.5 : 1,
                                             alignSelf: "flex-start",
                                             border: "none",
                                         }}
                                     >
-                                        {submitting
-                                            ? "Submitting..."
-                                            : "Submit Experience"}
+                                        {submitting ? "Submitting..." : "Submit Experience"}
                                     </motion.button>
                                 </div>
                             )}
@@ -747,18 +952,12 @@ export default function PlaceDetailPage() {
                             style={{
                                 marginTop: 40,
                                 paddingTop: 0,
-
-                                
                                 maxWidth: 520,
-                                marginLeft: 80, 
+                                marginLeft: 80,
                             }}
                         >
                             {/* Header */}
-                            <div
-                                style={{
-                                    marginBottom: 48,
-                                }}
-                            >
+                            <div style={{ marginBottom: 48 }}>
                                 <div
                                     style={{
                                         fontSize: 15,
@@ -776,7 +975,7 @@ export default function PlaceDetailPage() {
                                 <h3
                                     style={{
                                         fontFamily: "var(--font-title)",
-                                        fontSize: "clamp(28px, 2.5vw, 36px)", 
+                                        fontSize: "clamp(28px, 2.5vw, 36px)",
                                         fontWeight: 400,
                                         fontStyle: "italic",
                                         margin: 0,
@@ -803,7 +1002,7 @@ export default function PlaceDetailPage() {
 
                             {/* List */}
                             <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
-                                {reviews.map((r) => (
+                                {reviews.map((r: Review) => (
                                     <ReviewCard
                                         key={r.id}
                                         review={r}
@@ -814,12 +1013,11 @@ export default function PlaceDetailPage() {
                         </div>
                     </Reveal>
                 )}
-                </div>
-            
+            </div>
 
             {/* ── RELATED POSTS ─────────────────────────────────────────── */}
             <RelatedRestaurantsEditorial
-                season={place?.season ?? "summer"}
+                season={place.season ?? "summer"}
                 accent={season.accent}
                 currentId={place.id}
             />

@@ -1,11 +1,8 @@
-
-
-
 import { Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import Navbar from "./Navbar";
+import ScrollToTop from "./ScrollToTop";
 import AboutPage from "./pages/AboutPage";
-
 import HomePage from "./pages/HomePage";
 import MapPage from "./pages/MapPage";
 import SeasonPage from "./pages/SeasonPage";
@@ -16,6 +13,7 @@ function App() {
 
     return (
         <>
+            <ScrollToTop />
             <Navbar />
 
             <AnimatePresence mode="wait">
@@ -32,4 +30,3 @@ function App() {
 }
 
 export default App;
-
