@@ -160,6 +160,21 @@ export default function SeasonPage() {
                             exit={{ opacity: 0 }}
                             style={{ width: "100%" }}
                         >
+                            
+                            {isEditorial && places.length === 0 && (
+                               <div style={{
+                                   minHeight: "100vh",
+                                   display: "flex",
+                                   alignItems: "center",
+                                   justifyContent: "center",
+                                   color: "rgba(255,255,255,0.3)",
+                                   fontFamily: "var(--font-body)",
+                                   fontSize: 14,
+                                   letterSpacing: "0.2em",
+                             }}>
+                                    Loading...
+                                </div>
+                             )}        
                             {isEditorial && places.length > 0 && config && (
                                 <SeasonLayout
                                     seasonName={seasonName!}

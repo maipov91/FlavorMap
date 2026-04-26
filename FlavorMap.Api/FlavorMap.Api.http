@@ -1,6 +1,28 @@
 @FlavorMap.Api_HostAddress = http://localhost:5065
 
-GET {{FlavorMap.Api_HostAddress}}/weatherforecast/
+### Get all places
+GET {{FlavorMap.Api_HostAddress}}/api/places
 Accept: application/json
 
-###
+### Get places by season
+GET {{FlavorMap.Api_HostAddress}}/api/places?season=summer
+Accept: application/json
+
+### Get place detail
+GET {{FlavorMap.Api_HostAddress}}/api/places/1
+Accept: application/json
+
+### Get reviews for a place
+GET {{FlavorMap.Api_HostAddress}}/api/places/1/reviews
+Accept: application/json
+
+### Submit a review
+POST {{FlavorMap.Api_HostAddress}}/api/places/1/reviews
+Content-Type: application/json
+
+{
+    "nickname": "Test User",
+    "rating": 8,
+    "description": "Amazing seasonal experience.",
+    "season": "summer"
+}

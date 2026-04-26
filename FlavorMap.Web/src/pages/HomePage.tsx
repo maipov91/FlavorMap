@@ -245,7 +245,7 @@ export default function HomePage() {
             <footer className="hv2-footer">
                 <div className="hv2-footer__inner">
                     <span className="hv2-footer__brand">flavormap</span>
-                    <span className="hv2-footer__copy">A personal curation of Hanoi's dining · 2025</span>
+                    <span className="hv2-footer__copy">A personal curation of Hanoi's dining · 2026</span>
                 </div>
             </footer>
         </div>

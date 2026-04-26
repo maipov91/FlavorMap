@@ -197,7 +197,7 @@ function RelatedRestaurantsEditorial({
                 }
             })
             .catch(() => setPlaces([]));
-    }, [season]);
+    }, [season, apiBase]);
 
     if (places.length === 0) return null;
 

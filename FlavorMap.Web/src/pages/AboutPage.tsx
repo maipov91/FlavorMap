@@ -5,9 +5,9 @@ import "./AboutPage.css";
 
 const SEASONS = [
     { name: "Spring", color: "#8EC97A", bg: "#0F1F12", count: 5 },
-    { name: "Summer", color: "#A31621", bg: "#2B0A0D", count: 6 },
-    { name: "Autumn", color: "#D4A820", bg: "#1C1404", count: 4 },
-    { name: "Winter", color: "#7AA8D4", bg: "#080F1C", count: 4 },
+    { name: "Summer", color: "#A31621", bg: "#2B0A0D", count: 7 },
+    { name: "Autumn", color: "#D4A820", bg: "#1C1404", count: 5 },
+    { name: "Winter", color: "#7AA8D4", bg: "#080F1C", count: 5 },
 ];
 
 export default function AboutPage() {
@@ -84,7 +84,7 @@ export default function AboutPage() {
                 <div className="about-seasons__inner">
                     <div className="about-section-number">02</div>
                     <div style={{ flex: 1 }}>
-                        <h2 className="about-section-title" style={{ color: "#F5ECD8" }}>19 restaurants · 4 seasons</h2>
+                        <h2 className="about-section-title" style={{ color: "#F5ECD8" }}>22 restaurants · 4 seasons</h2>
                         <div className="about-seasons__grid">
                             {SEASONS.map((s, i) => (
                                 <motion.div
@@ -177,7 +177,9 @@ export default function AboutPage() {
             <footer className="about-footer">
                 <div className="about-footer__inner">
                     <span className="about-footer__brand">flavormap</span>
-                    <span className="about-footer__copy">A personal curation of Hanoi's dining · 2025</span>
+                    <span className="about-footer__copy">A personal curation of Hanoi's dining · 2026
+                    
+                    </span>
                 </div>
             </footer>
         </motion.div>
